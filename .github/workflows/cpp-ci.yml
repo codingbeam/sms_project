@@ -31,7 +31,7 @@ jobs:
 
       - name: Configure with CMake
         shell: msys2 {0}
-        run: cmake -S . -B buil -G "MinGW Makefiles"
+        run: cmake -S . -B build -G "MinGW Makefiles"
 
       - name: Build application and tests
         shell: msys2 {0}
