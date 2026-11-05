@@ -31,7 +31,7 @@ jobs:
 
       - name: Configure with CMake
         shell: msys2 {0}
-        run: cmake -S . -B build -G "MinGW Makefiles"
+        run: cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
 
       - name: Build application and tests
         shell: msys2 {0}
@@ -40,3 +40,12 @@ jobs:
       - name: Run tests
         shell: msys2 {0}
         run: ctest --test-dir build --output-on-failure
+
+      - name: Upload Student Application artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: StudentManagementSystem-Windows
+          path: build/StudentApp.exe
+          if-no-files-found: error
+          retention-days: 7
