@@ -72,6 +72,45 @@ TEST(StudentManagerTest, ReturnsEmptyWhenStudentIdDoesNotExist) {
     EXPECT_FALSE(manager.findStudentById(99).has_value());
 }
 
+TEST(StudentManagerTest, FindsStudentsWithinInclusiveMarksRange) {
+    StudentManager manager;
+    ASSERT_TRUE(manager.addStudent(Student(1, "Below", 49.9)));
+    ASSERT_TRUE(manager.addStudent(Student(2, "Minimum", 50.0)));
+    ASSERT_TRUE(manager.addStudent(Student(3, "Middle", 75.0)));
+    ASSERT_TRUE(manager.addStudent(Student(4, "Maximum", 90.0)));
+    ASSERT_TRUE(manager.addStudent(Student(5, "Above", 90.1)));
+
+    const auto students = manager.findStudentsByMarksRange(50.0, 90.0);
+
+    ASSERT_TRUE(students.has_value());
+    ASSERT_EQ(3U, students->size());
+    EXPECT_EQ(2, (*students)[0].getId());
+    EXPECT_EQ(3, (*students)[1].getId());
+    EXPECT_EQ(4, (*students)[2].getId());
+}
+
+TEST(StudentManagerTest, ReturnsEmptyVectorWhenNoStudentsMatchMarksRange) {
+    StudentManager manager;
+    ASSERT_TRUE(manager.addStudent(Student(1, "Avery", 75.0)));
+
+    const auto students = manager.findStudentsByMarksRange(80.0, 90.0);
+
+    ASSERT_TRUE(students.has_value());
+    EXPECT_TRUE(students->empty());
+}
+
+TEST(StudentManagerTest, RejectsInvalidMarksRanges) {
+    StudentManager manager;
+
+    EXPECT_FALSE(manager.findStudentsByMarksRange(-1.0, 50.0).has_value());
+    EXPECT_FALSE(manager.findStudentsByMarksRange(50.0, 101.0).has_value());
+    EXPECT_FALSE(manager.findStudentsByMarksRange(60.0, 50.0).has_value());
+    EXPECT_FALSE(manager.findStudentsByMarksRange(
+        std::numeric_limits<double>::quiet_NaN(), 50.0).has_value());
+    EXPECT_FALSE(manager.findStudentsByMarksRange(
+        0.0, std::numeric_limits<double>::infinity()).has_value());
+}
+
 TEST(StudentManagerTest, RejectsNonPositiveStudentId) {
     StudentManager manager;
 

@@ -17,6 +17,11 @@ cmake_minimum_required(VERSION 3.20)
 		src/StudentManager.cpp
 	)
 
+	target_compile_options(StudentApp PRIVATE
+		-g
+		-O0
+	)
+
 	# Include header files
 	target_include_directories(StudentApp PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR}/include

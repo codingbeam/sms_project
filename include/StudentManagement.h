@@ -11,6 +11,8 @@ public:
     bool addStudent(const Student& student);
     void displayStudents() const;
     std::optional<Student> findStudentById(int id) const;
+    std::optional<std::vector<Student>> findStudentsByMarksRange(
+        double minimumMarks, double maximumMarks) const;
     std::optional<double> calculateAverageMarks() const;
     std::optional<Student> findTopStudent() const;
 

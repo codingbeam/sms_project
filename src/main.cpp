@@ -96,6 +96,7 @@ int main() {
                   << "3. Find student by ID\n"
                   << "4. Calculate average marks\n"
                   << "5. Find top student\n"
+                  << "6. Filter students by marks range\n"
                   << "0. Exit\n";
 
         const auto choice = readNumber<int>("Choose an option: ");
@@ -145,6 +146,36 @@ int main() {
                 displayStudent(*topStudent);
             } else {
                 std::cout << "No students available to find a top student.\n";
+            }
+            break;
+        }
+        case 6: {
+            const auto minimumMarks =
+                readNumber<double>("Enter minimum marks (0-100): ");
+            if (!minimumMarks) {
+                std::cout << "\nInput ended. Exiting.\n";
+                return 0;
+            }
+
+            const auto maximumMarks =
+                readNumber<double>("Enter maximum marks (0-100): ");
+            if (!maximumMarks) {
+                std::cout << "\nInput ended. Exiting.\n";
+                return 0;
+            }
+
+            const auto matchingStudents =
+                manager.findStudentsByMarksRange(*minimumMarks, *maximumMarks);
+            if (!matchingStudents) {
+                std::cout << "Invalid marks range. Enter values from 0 to 100 "
+                             "with minimum no greater than maximum.\n";
+            } else if (matchingStudents->empty()) {
+                std::cout << "No students found in that marks range.\n";
+            } else {
+                std::cout << "Students in marks range:\n";
+                for (const Student& student : *matchingStudents) {
+                    displayStudent(student);
+                }
             }
             break;
         }
